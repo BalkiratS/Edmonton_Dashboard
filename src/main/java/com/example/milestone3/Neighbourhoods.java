@@ -25,7 +25,7 @@ public class Neighbourhoods {
         }
 
         for (Map.Entry<Integer, String> entry: getAllNeighbourhoods(assessedValueData).entrySet()){
-            //neighbourhoods.add(new Neighbourhood(entry.getKey(), entry.getValue(), new AverageAssessedValue(assessedValueData, entry.getKey()), new NeighbourhoodDevelopment(developmentData, entry.getValue()), new Languages(languageData, entry.getKey())));
+            neighbourhoods.add(new Neighbourhood(entry.getKey(), entry.getValue(), new AverageAssessedValue(assessedValueData, entry.getKey()), new NeighbourhoodDevelopment(developmentData, entry.getValue()), new Languages(languageData, entry.getValue())));
         }
 
     }

@@ -3,10 +3,11 @@ package com.example.milestone3;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NeighbourhoodDevelopment {
 
-    HashMap <Integer, Double> development = new HashMap<Integer, Double>();
+    Map<Integer, Double> development = new HashMap<Integer, Double>();
 
     NeighbourhoodDevelopment(List<String[]> data, String neighbourhoodName){
 
@@ -25,7 +26,7 @@ public class NeighbourhoodDevelopment {
 
     }
 
-    public HashMap<Integer, Double> getDevelopment(){
+    public Map<Integer, Double> getDevelopment(){
         return development;
     }
 
