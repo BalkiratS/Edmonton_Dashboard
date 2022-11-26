@@ -12,7 +12,7 @@ public class NeighbourhoodDevelopment {
     NeighbourhoodDevelopment(List<String[]> data, String neighbourhoodName){
 
         for (String[] row : data){
-            if(row[2].equals(neighbourhoodName)){
+            if(row[2].equalsIgnoreCase(neighbourhoodName)){
                 if(!development.containsKey(Integer.parseInt(row[0]))){
                     development.put(Integer.parseInt(row[0]), Double.parseDouble(row[3]));
                 }else {
@@ -22,8 +22,6 @@ public class NeighbourhoodDevelopment {
             }
 
         }
-
-
     }
 
     public Map<Integer, Double> getDevelopment(){

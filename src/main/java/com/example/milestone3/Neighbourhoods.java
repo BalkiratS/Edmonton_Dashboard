@@ -42,4 +42,12 @@ public class Neighbourhoods {
     public List<Neighbourhood> getNeighbourhoodsList(){
         return new ArrayList<>(neighbourhoods);
     }
+
+    public List<String> getUniqueNeighbourhoodNames(){
+        List<String> neighbourhoodNames = new ArrayList<>();
+        for (Neighbourhood neighbourhood: neighbourhoods){
+            neighbourhoodNames.add(neighbourhood.getNeighbourhoodName());
+        }
+        return neighbourhoodNames;
+    }
 }
