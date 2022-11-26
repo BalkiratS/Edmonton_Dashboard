@@ -30,7 +30,7 @@ public class LanguagesGraphTest extends Application {
         configureGraph();
 
         Button plotButton = new Button("Plot");
-        plotButton.setOnAction(actionEvent -> plotData("CRESTWOOD"));
+        plotButton.setOnAction(actionEvent -> plotData("ermineskin"));
 
         mainBox.getChildren().addAll(languageCharts, plotButton);
 
@@ -54,7 +54,7 @@ public class LanguagesGraphTest extends Application {
 
         XYChart.Series<Number, String> series = new XYChart.Series<>();
         for (Neighbourhood neighbourhood : neighbourhoods.getNeighbourhoodsList()) {
-            if (neighbourhoodName.equals(neighbourhood.getNeighbourhoodName())){
+            if (neighbourhoodName.equalsIgnoreCase(neighbourhood.getNeighbourhoodName())){
 
                 for ( String key : neighbourhood.getLanguages().keySet() ) {
                     series.getData().add(new XYChart.Data<>(neighbourhood.getLanguages().get(key), key));
