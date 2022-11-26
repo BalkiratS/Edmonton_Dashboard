@@ -9,8 +9,9 @@ public class Languages {
     private final Map<String, Integer> languages = new HashMap<>();
 
     /*public static void main(String[] args) throws IOException, URISyntaxException {
-        List<String[]> readFile = Utils.readData("/Datasets/2016_Census_-_Dwelling_Unit_by_Language__Neighbourhood_Ward_.csv");
-        System.out.println(Arrays.toString(readFile.get(0)));
+        Languages languages1 = new Languages(Utils.readData("/Datasets/2016_Census_-_Dwelling_Unit_by_Language__Neighbourhood_Ward_.csv"),
+                "CRESTWOOD");
+        System.out.println(languages1);
     }*/
 
     // Languages constructor
@@ -34,5 +35,10 @@ public class Languages {
 
     public Map<String, Integer> getLanguages() {
         return languages;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(languages);
     }
 }
