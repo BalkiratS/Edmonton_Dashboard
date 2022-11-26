@@ -21,6 +21,10 @@ public class Neighbourhood {
         return neighbourhoodID;
     }
 
+    public String getNeighbourhoodName() {
+        return neighbourhoodName;
+    }
+
     public Double getAverageAssessedValue() {
         return averageAssessedValue.getAverageAssessedValue();
     }

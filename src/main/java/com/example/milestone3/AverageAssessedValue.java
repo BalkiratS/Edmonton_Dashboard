@@ -7,7 +7,7 @@ public class AverageAssessedValue {
     public AverageAssessedValue(List<String[]> data, int nID){
         int count = 0;
         for (String[] row : data){
-            if (nID == Integer.parseInt(row[5])){
+            if (!row[5].isEmpty() && nID == Integer.parseInt(row[5]) && row[15].equals("RESIDENTIAL") && Double.parseDouble(row[8]) != 0){
                 averageAssessedValue += Double.parseDouble(row[8]);
                 count++;
             }

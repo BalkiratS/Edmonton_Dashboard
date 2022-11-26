@@ -9,7 +9,7 @@ import static com.example.milestone3.Utils.readData;
 
 public class Neighbourhoods {
 
-    List<Neighbourhood> neighbourhoods;
+    List<Neighbourhood> neighbourhoods = new ArrayList<>();
 
     public Neighbourhoods(){
         List<String[]> assessedValueData = new ArrayList<>();
@@ -37,5 +37,9 @@ public class Neighbourhoods {
             idNameMap.put(Integer.parseInt(row[5]), row[6]);}
         }
         return idNameMap;
+    }
+
+    public List<Neighbourhood> getNeighbourhoodsList(){
+        return new ArrayList<>(neighbourhoods);
     }
 }
