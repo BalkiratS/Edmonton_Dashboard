@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,6 +30,8 @@ public class LanguagesGraphTest extends Application {
         configureGraph();
 
         Button plotButton = new Button("Plot");
+        plotButton.setOnAction(actionEvent -> plotData("CRESTWOOD"));
+
         mainBox.getChildren().addAll(languageCharts, plotButton);
 
         primaryStage.show();
@@ -46,16 +49,19 @@ public class LanguagesGraphTest extends Application {
         languageCharts.setLegendVisible(false);
     }
 
-    /*public void plotData(String neighbourhoodName) throws IOException, URISyntaxException {
+    public void plotData(String neighbourhoodName) {
         Neighbourhoods neighbourhoods = new Neighbourhoods(); // create the list of neighbourhoods
 
         XYChart.Series<Number, String> series = new XYChart.Series<>();
         for (Neighbourhood neighbourhood : neighbourhoods.getNeighbourhoodsList()) {
-            if (neighbourhood.getLanguages() >= minRange && neighbourhood.getAverageAssessedValue() <= maxRange){
-                series.getData().add(new XYChart.Data<>(neighbourhood.getAverageAssessedValue(), neighbourhood.getNeighbourhoodName()));
+            if (neighbourhoodName.equals(neighbourhood.getNeighbourhoodName())){
+
+                for ( String key : neighbourhood.getLanguages().keySet() ) {
+                    series.getData().add(new XYChart.Data<>(neighbourhood.getLanguages().get(key), key));
+                }
             }
 
         }
         languageCharts.getData().add(series); //add series to bar chart
-    }*/
+    }
 }
