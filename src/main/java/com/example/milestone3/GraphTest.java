@@ -25,7 +25,7 @@ public class GraphTest extends Application {
 
         VBox mainBox = new VBox(10);
 
-        Scene scene = new Scene(mainBox, 700, 700);
+        Scene scene = new Scene(mainBox, 1300, 850);
         stage.setScene(scene);
 
         ScrollPane scrollPane = new ScrollPane();
@@ -33,15 +33,17 @@ public class GraphTest extends Application {
 
         plotAssessedValueButton = new Button("Plot");
         configureAssessedValueGraph();
-        assessedValueChart.setMinHeight(401*50);
-        assessedValueChart.setMinWidth(2000);
-        scrollPane.setContent(assessedValueChart);
-        scrollPane.prefHeightProperty().bind(scene.heightProperty());
+        assessedValueChart.setMinHeight(22*40);
+        assessedValueChart.setMinWidth(1300);
+        //scrollPane.setContent(assessedValueChart);
+        //scrollPane.prefHeightProperty().bind(scene.heightProperty());
         //assessedValueChart.setMinHeight(20000);
 
-        plotAssessedValueButton.setOnAction(actionEvent -> plotAssessedValueGraph(0, 20000000));
+        plotAssessedValueGraph(575001, 750000);
 
-        mainBox.getChildren().addAll(scrollPane, plotAssessedValueButton);
+        //plotAssessedValueButton.setOnAction(actionEvent -> plotAssessedValueGraph(125001, 225000));//20000000
+
+        mainBox.getChildren().addAll(assessedValueChart);
 
         stage.show();
 
@@ -49,15 +51,17 @@ public class GraphTest extends Application {
 
     private void plotAssessedValueGraph(double minRange, double maxRange){ //min = 0, max = 49,525,000 or 19,624,000
         Neighbourhoods neighbourhoods = new Neighbourhoods(); // create the list of neighbourhoods
-
+        int count = 0;
         XYChart.Series<Number, String> series = new XYChart.Series<>();
         for (Neighbourhood neighbourhood : neighbourhoods.getNeighbourhoodsList()) { //create the series with list of AccountEntry
             if (neighbourhood.getAverageAssessedValue() >= minRange && neighbourhood.getAverageAssessedValue() <= maxRange){
                 series.getData().add(new XYChart.Data<>(neighbourhood.getAverageAssessedValue(), neighbourhood.getNeighbourhoodName()));
+                count ++;
             }
 
         }
         assessedValueChart.getData().add(series); //add series to bar chart
+        System.out.println(count);
     }
 
     private void configureAssessedValueGraph(){

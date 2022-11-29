@@ -4,10 +4,13 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,6 +28,7 @@ public class HelloApplication extends Application {
     private Neighbourhoods neighbourhoods;
     private final ComboBox<Object> neighbourhoodInput = new ComboBox<>();
     private VBox valuesVBox;
+    private VBox inputBox;
     private VBox dropdownsVBox;
     private String boxStyle = "-fx-padding: 10;" +
             "-fx-border-style: solid inside;" +
@@ -32,6 +36,22 @@ public class HelloApplication extends Application {
             "-fx-border-insets: 5;" +
             "-fx-border-radius: 3;" +
             "-fx-border-color: gainsboro;";
+
+    private final String titleFont = "-fx-background-color: transparent;" +
+            "-fx-font-family: Georgia;" +
+            "-fx-font-size: 20px;" +
+            "-fx-font-weight: bold";
+
+    private String cssStyle = "-fx-background-color: transparent;" +
+            "-fx-font-family: Verdana;" +
+            "-fx-font-size: 14px;" +
+            "-fx-padding: 10;" +
+            "-fx-border-style: solid inside;" +
+            "-fx-border-width: 1;" +
+            "-fx-border-insets: 5;" +
+            "-fx-border-radius: 4;" +
+            "-fx-border-color: grey;";
+
     private BarChart<String, Number> barChart;
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
@@ -39,83 +59,110 @@ public class HelloApplication extends Application {
 
         BorderPane fullLayout = new BorderPane();
 
-        Scene scene = new Scene(fullLayout, 1000, 800);
+        Scene scene = new Scene(fullLayout, 1300, 850);
         stage.setScene(scene);
 
         neighbourhoods = new Neighbourhoods(); // read data
 
-        //Vbox for Neighbourhood range check boxes
-        setValuesBox();
+        configureInputBox();
 
-        //bottom left VBOX which includes dropdowns
-        setDropdownsVBox();
-
-
-        //this VBOX will have 2 VBOX menus (the entire left side menu) - parent VBOX, 2 VBOX children
-        VBox parentVBox = new VBox();
-        valuesVBox.setSpacing(10);
-
-        parentVBox.getChildren().addAll(valuesVBox, dropdownsVBox);
-
-        //create barchart for the right side of the window (placeholder)
         configureGraph();
 
-        fullLayout.setLeft(parentVBox);
+        fullLayout.setLeft(inputBox);
         fullLayout.setCenter(barChart);
 
         stage.show();
     }
 
-    private void setValuesBox(){
+    private void configureInputBox(){
+        inputBox = new VBox(10);
+        //inputBox.maxWidth(100);
+        inputBox.setStyle(cssStyle);
 
-        valuesVBox = new VBox();
-        valuesVBox.setSpacing(10);
+        configureChoices();
 
-        //range menu style
-        valuesVBox.setMaxSize(300, 100);
-        valuesVBox.setStyle(boxStyle);
+        configureFilters();
 
-        Label assessmentTitle = new Label("Neighbourhood Assessments Range");
-        valuesVBox.getChildren().add(assessmentTitle);
+        HBox plotResetBox = new HBox(10);
+        plotResetBox.setPadding(new Insets(20, 0, 0, 0));
 
-        //labels array for checkboxes
-        String[] labels = {"$0 - $200,000", "$200,000 - $300,000", "$300,000 - $400,000",
-                "$400,000 - $500,000", "$500,000 - $600,000","$600,000 - $700,000"};
+        Button plot = new Button("Plot");
+        plot.setMaxWidth(Double.MAX_VALUE);
 
-        ToggleGroup tg = new ToggleGroup();
+        Button reset = new Button("Reset");
+        reset.setMaxWidth(Double.MAX_VALUE);
 
-        // radio buttons for the range of assessments
-        for (String label : labels) {
-            RadioButton box = new RadioButton(label);
-            box.setToggleGroup(tg);
-            valuesVBox.getChildren().add(box);
+        HBox.setHgrow(plot, Priority.ALWAYS);
+        HBox.setHgrow(reset, Priority.ALWAYS);
+        plotResetBox.getChildren().addAll(plot, reset);
 
-            //create event handler for each checkbox with a label to display it
-            Label rangeSelected = new Label();
-            String range = label;
-            EventHandler<ActionEvent> select = e -> {
-                if (box.isSelected()) {
-                    rangeSelected.setText(range + " is selected");
-                }
-            };
-            box.setOnAction(select);
-
-            valuesVBox.getChildren().add(rangeSelected);
-        }
+        inputBox.getChildren().addAll(plotResetBox);
     }
 
-    private void setDropdownsVBox(){
-        dropdownsVBox = new VBox();
-        dropdownsVBox.setSpacing(10);
-        dropdownsVBox.setStyle(boxStyle);
+    private void configureChoices(){
+        Label title1 = new Label("Select Criteria");
+        title1.setPadding(new Insets(0, 0, 5, 0));
+        title1.setStyle(titleFont);
 
-        //populate dropdown
-        neighbourhoodInput.setMaxWidth(200);
-        neighbourhoodInput.getItems().clear();
-        neighbourhoodInput.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+        ToggleGroup choiceGroup = new ToggleGroup();
 
-        //add dropdown to VBOX
-        dropdownsVBox.getChildren().add(neighbourhoodInput);
+        RadioButton assessedValueButton = new RadioButton("Average Assessed value");
+        assessedValueButton.setPadding(new Insets(10, 0, 10, 0));
+        assessedValueButton.setToggleGroup(choiceGroup);
+
+        RadioButton developmentButton = new RadioButton("Average Development (2000-2013)");
+        developmentButton.setPadding(new Insets(0, 0, 10, 0));
+        developmentButton.setToggleGroup(choiceGroup);
+
+        RadioButton languageButton = new RadioButton("Top 10 Languages");
+        languageButton.setPadding(new Insets(0, 0, 10, 0));
+        languageButton.setToggleGroup(choiceGroup);
+
+        Separator line = new Separator();
+
+        inputBox.getChildren().addAll(title1, assessedValueButton, developmentButton, languageButton, line);
+    }
+
+    private void configureFilters(){
+        Label title2 = new Label("Filters");
+        title2.setStyle(titleFont);
+        title2.setPadding(new Insets(0, 0, 5, 0));
+
+        Label rangeLabel = new Label("Assessed Value Range:");
+        rangeLabel.setPadding(new Insets(10, 0 , 0, 0));
+        ComboBox<String> rangeBox = new ComboBox<>();
+        rangeBox.setMaxWidth(250);
+
+        String[] rangeList = {"$0 - $125,000", "$125,000 - $200,000", "$200,000 - $235,000",
+                "$235,000 - $255,000", "$255,000 - $275,000","$275,000 - $285,000", "$285,000 - $295,000", "$295,000 - $315,000",
+                "$315,000 - $340,000", "$340,000 - $380,000", "$380,000 - $410,000", "$410,000 - $445,000", "$445,000 - $575,000",
+                "$575,000 - $750,000", "$750,000 - $1,000,000", "$1,000,000 - $50,000,000"};
+
+        rangeBox.getItems().addAll(rangeList);
+
+        Label neighbourhood1Label = new Label("Neighbourhood 1:");
+        neighbourhood1Label.setPadding(new Insets(10, 0 , 0, 0));
+        ComboBox<String> neighbourhood1Box = new ComboBox<>();
+        neighbourhood1Box.setMaxWidth(250);
+        neighbourhood1Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+
+
+        Label neighbourhood2Label = new Label("Neighbourhood 2:");
+        neighbourhood2Label.setPadding(new Insets(10, 0 , 0, 0));
+        ComboBox<String> neighbourhood2Box = new ComboBox<>();
+        neighbourhood2Box.setMaxWidth(250);
+        neighbourhood2Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+
+
+        Label neighbourhood3Label = new Label("Neighbourhood 3:");
+        neighbourhood3Label.setPadding(new Insets(10, 0 , 0, 0));
+        ComboBox<String> neighbourhood3Box = new ComboBox<>();
+        neighbourhood3Box.setMaxWidth(250);
+        neighbourhood3Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+
+        Separator line2 = new Separator();
+
+        inputBox.getChildren().addAll(title2, rangeLabel, rangeBox, neighbourhood1Label, neighbourhood1Box, neighbourhood2Label, neighbourhood2Box, neighbourhood3Label, neighbourhood3Box, line2);
     }
 
     private void configureGraph(){

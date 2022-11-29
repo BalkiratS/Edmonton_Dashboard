@@ -7,7 +7,7 @@ import java.util.*;
 import static com.example.milestone3.Utils.readData;
 
 
-public class Neighbourhoods {
+public class Neighbourhoods{
 
     List<Neighbourhood> neighbourhoods = new ArrayList<>();
 
@@ -40,7 +40,9 @@ public class Neighbourhoods {
     }
 
     public List<Neighbourhood> getNeighbourhoodsList(){
-        return new ArrayList<>(neighbourhoods);
+        return neighbourhoods.stream()
+                .sorted(Comparator.comparing(Neighbourhood::getAverageAssessedValue))
+                .toList();
     }
 
     public List<String> getUniqueNeighbourhoodNames(){
