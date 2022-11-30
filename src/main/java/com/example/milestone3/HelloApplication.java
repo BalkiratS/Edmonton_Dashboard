@@ -5,13 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -55,22 +56,37 @@ public class HelloApplication extends Application {
     private BarChart<String, Number> barChart;
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
-        stage.setTitle("Neighbourhood information");
 
+
+        // add loading screen
+        VBox splashPane = new VBox();
+        //Label label = new Label("Loading ...");
+        Text label = new Text("Loading ...");
+//        label.setTextFill(Color.RED);
+//        label.setAlignment(Pos.CENTER);
+
+        splashPane.getChildren().addAll(label);
+
+        Scene splashScene = new Scene(splashPane, 300, 300);
+        stage.setTitle("Loading...");
+        stage.setScene(splashScene);
+        stage.show();
+
+        neighbourhoods = new Neighbourhoods(); // read data
+        stage.hide();
+
+        configureInputBox();
+        configureGraph();
+
+        stage.setTitle("Neighbourhood information");
         BorderPane fullLayout = new BorderPane();
 
         Scene scene = new Scene(fullLayout, 1300, 850);
-        stage.setScene(scene);
-
-        neighbourhoods = new Neighbourhoods(); // read data
-
-        configureInputBox();
-
-        configureGraph();
 
         fullLayout.setLeft(inputBox);
         fullLayout.setCenter(barChart);
 
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -226,13 +242,13 @@ public class HelloApplication extends Application {
 
     private void configureGraph(){
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("yaxis");
+        xAxis.setLabel("X-Axis");
         xAxis.setStyle("-fx-font-weight: bold;");
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Graph");
+        yAxis.setLabel("Y-Axis");
         yAxis.setStyle("-fx-font-weight: bold;");
         barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("x axis");
+        barChart.setTitle("Graph");
         barChart.setAnimated(false);
         barChart.setLegendVisible(false);
     }
