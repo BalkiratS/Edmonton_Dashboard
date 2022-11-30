@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,17 +27,16 @@ import static com.example.milestone3.Utils.readData;
 public class HelloApplication extends Application {
 
     private Neighbourhoods neighbourhoods;
-    private final ComboBox<Object> neighbourhoodInput = new ComboBox<>();
-    private VBox valuesVBox;
     private VBox inputBox;
-    private VBox dropdownsVBox;
-    private String boxStyle = "-fx-padding: 10;" +
-            "-fx-border-style: solid inside;" +
-            "-fx-border-width: 2;" +
-            "-fx-border-insets: 5;" +
-            "-fx-border-radius: 3;" +
-            "-fx-border-color: gainsboro;";
-
+    private RadioButton assessedValueButton;
+    private RadioButton developmentButton;
+    private RadioButton languageButton;
+    private ComboBox<String> rangeBox;
+    private ComboBox<String> neighbourhood1Box;
+    private ComboBox<String> neighbourhood2Box;
+    private ComboBox<String> neighbourhood3Box;
+    private Button plot;
+    private Button reset;
     private final String titleFont = "-fx-background-color: transparent;" +
             "-fx-font-family: Georgia;" +
             "-fx-font-size: 20px;" +
@@ -86,11 +86,17 @@ public class HelloApplication extends Application {
         HBox plotResetBox = new HBox(10);
         plotResetBox.setPadding(new Insets(20, 0, 0, 0));
 
-        Button plot = new Button("Plot");
+        plot = new Button("Plot");
         plot.setMaxWidth(Double.MAX_VALUE);
 
-        Button reset = new Button("Reset");
+        reset = new Button("Reset");
         reset.setMaxWidth(Double.MAX_VALUE);
+        reset.setOnAction(actionEvent -> {  rangeBox.setValue(null);
+                                            rangeBox.setDisable(true);
+                                            neighbourhood1Box.setDisable(true);
+                                            assessedValueButton.setSelected(false);
+                                            developmentButton.setSelected(false);
+                                            languageButton.setSelected(false);});
 
         HBox.setHgrow(plot, Priority.ALWAYS);
         HBox.setHgrow(reset, Priority.ALWAYS);
@@ -106,17 +112,27 @@ public class HelloApplication extends Application {
 
         ToggleGroup choiceGroup = new ToggleGroup();
 
-        RadioButton assessedValueButton = new RadioButton("Average Assessed value");
+        assessedValueButton = new RadioButton("Average Assessed value");
         assessedValueButton.setPadding(new Insets(10, 0, 10, 0));
         assessedValueButton.setToggleGroup(choiceGroup);
+        assessedValueButton.setOnAction(actionEvent -> {rangeBox.setValue(null);
+                                                        rangeBox.setDisable(false);
+                                                        neighbourhood1Box.setDisable(true);});
 
-        RadioButton developmentButton = new RadioButton("Average Development (2000-2013)");
+        developmentButton = new RadioButton("Average Development (2000-2013)");
         developmentButton.setPadding(new Insets(0, 0, 10, 0));
         developmentButton.setToggleGroup(choiceGroup);
+        developmentButton.setOnAction(actionEvent -> {
+                                                    rangeBox.setValue(null);
+                                                    rangeBox.setDisable(false);
+                                                    neighbourhood1Box.setDisable(false);});
 
-        RadioButton languageButton = new RadioButton("Top 10 Languages");
+        languageButton = new RadioButton("Top 10 Languages");
         languageButton.setPadding(new Insets(0, 0, 10, 0));
         languageButton.setToggleGroup(choiceGroup);
+        languageButton.setOnAction(actionEvent -> { rangeBox.setValue(null);
+                                                    rangeBox.setDisable(false);
+                                                    neighbourhood1Box.setDisable(false);});
 
         Separator line = new Separator();
 
@@ -130,7 +146,8 @@ public class HelloApplication extends Application {
 
         Label rangeLabel = new Label("Assessed Value Range:");
         rangeLabel.setPadding(new Insets(10, 0 , 0, 0));
-        ComboBox<String> rangeBox = new ComboBox<>();
+        rangeBox = new ComboBox<>();
+        rangeBox.setDisable(true);
         rangeBox.setMaxWidth(250);
 
         String[] rangeList = {"$0 - $125,000", "$125,000 - $200,000", "$200,000 - $235,000",
@@ -142,27 +159,69 @@ public class HelloApplication extends Application {
 
         Label neighbourhood1Label = new Label("Neighbourhood 1:");
         neighbourhood1Label.setPadding(new Insets(10, 0 , 0, 0));
-        ComboBox<String> neighbourhood1Box = new ComboBox<>();
+        neighbourhood1Box = new ComboBox<>();
+        neighbourhood1Box.setDisable(true);
         neighbourhood1Box.setMaxWidth(250);
         neighbourhood1Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
 
 
         Label neighbourhood2Label = new Label("Neighbourhood 2:");
         neighbourhood2Label.setPadding(new Insets(10, 0 , 0, 0));
-        ComboBox<String> neighbourhood2Box = new ComboBox<>();
+        neighbourhood2Box = new ComboBox<>();
+        neighbourhood2Box.setDisable(true);
         neighbourhood2Box.setMaxWidth(250);
-        neighbourhood2Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
 
 
         Label neighbourhood3Label = new Label("Neighbourhood 3:");
         neighbourhood3Label.setPadding(new Insets(10, 0 , 0, 0));
-        ComboBox<String> neighbourhood3Box = new ComboBox<>();
+        neighbourhood3Box = new ComboBox<>();
+        neighbourhood3Box.setDisable(true);
         neighbourhood3Box.setMaxWidth(250);
-        neighbourhood3Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+
+        rangeBox.setOnAction(actionEvent -> {
+
+
+            neighbourhood1Box.getItems().clear();
+
+            neighbourhood2Box.getItems().clear();
+            neighbourhood2Box.setDisable(true);
+
+            neighbourhood3Box.getItems().clear();
+            neighbourhood3Box.setDisable(true);
+
+            if (rangeBox.getValue() != null){
+                Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
+                Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
+                for (Neighbourhood neighbourhood: neighbourhoods.getNeighbourhoodsInRange(minRange, maxRange)){
+                    neighbourhood1Box.getItems().add(neighbourhood.getNeighbourhoodName());
+                }
+            }
+
+        });
+
+        neighbourhood1Box.setOnAction(actionEvent -> {
+                                                    neighbourhood2Box.setValue(null);
+                                                    neighbourhood2Box.getItems().clear();
+                                                    neighbourhood2Box.getItems().addAll(neighbourhood1Box.getItems());
+                                                    neighbourhood2Box.getItems().remove(neighbourhood1Box.getValue());
+                                                    neighbourhood2Box.setDisable(false);
+                                                      });
+
+        neighbourhood2Box.setOnAction(actionEvent -> {
+                                                    neighbourhood3Box.setValue(null);
+                                                    neighbourhood3Box.getItems().clear();
+                                                    neighbourhood3Box.getItems().addAll(neighbourhood2Box.getItems());
+                                                    neighbourhood3Box.getItems().remove(neighbourhood1Box.getValue());
+                                                    neighbourhood3Box.getItems().remove(neighbourhood2Box.getValue());
+                                                    neighbourhood3Box.setDisable(false);});
 
         Separator line2 = new Separator();
 
         inputBox.getChildren().addAll(title2, rangeLabel, rangeBox, neighbourhood1Label, neighbourhood1Box, neighbourhood2Label, neighbourhood2Box, neighbourhood3Label, neighbourhood3Box, line2);
+    }
+
+    private Double currencyToDouble(String currency){
+        return Double.parseDouble(currency.replaceAll("[$,]", ""));
     }
 
     private void configureGraph(){

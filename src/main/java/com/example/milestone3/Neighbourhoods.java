@@ -24,13 +24,13 @@ public class Neighbourhoods{
             System.out.println("Error in file");
         }
 
-        for (Map.Entry<Integer, String> entry: getAllNeighbourhoods(assessedValueData).entrySet()){
+        for (Map.Entry<Integer, String> entry: getAllNeighbourhoodsIDName(assessedValueData).entrySet()){
             neighbourhoods.add(new Neighbourhood(entry.getKey(), entry.getValue(), new AverageAssessedValue(assessedValueData, entry.getKey()), new NeighbourhoodDevelopment(developmentData, entry.getValue()), new Languages(languageData, entry.getValue())));
         }
 
     }
 
-    private Map<Integer,String> getAllNeighbourhoods(List<String[]> assessedValueData){
+    private Map<Integer,String> getAllNeighbourhoodsIDName(List<String[]> assessedValueData){
         Map<Integer, String> idNameMap = new HashMap<>();
         for (String[] row: assessedValueData){
             if (!row[5].isEmpty()){
@@ -51,5 +51,15 @@ public class Neighbourhoods{
             neighbourhoodNames.add(neighbourhood.getNeighbourhoodName());
         }
         return neighbourhoodNames;
+    }
+
+    public List<Neighbourhood> getNeighbourhoodsInRange(Double min, Double max){
+        List<Neighbourhood> returnList = new ArrayList<>();
+        for (Neighbourhood neighbourhood: neighbourhoods){
+            if (neighbourhood.getAverageAssessedValue() >= min && neighbourhood.getAverageAssessedValue() <= max){
+                returnList.add(neighbourhood);
+            }
+        }
+        return returnList;
     }
 }
