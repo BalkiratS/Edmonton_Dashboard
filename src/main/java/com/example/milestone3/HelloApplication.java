@@ -62,42 +62,31 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
 
-
-        /*
-        // add loading screen
-        VBox splashPane = new VBox();
-        //Label label = new Label("Loading ...");
-        Text label = new Text("Loading ...");
-//        label.setTextFill(Color.RED);
-//        label.setAlignment(Pos.CENTER);
-
-        splashPane.getChildren().addAll(label);
-
-        Scene loading = new Scene(splashPane, 300, 300);
-        stage.setTitle("Loading...");
-        stage.setScene(loading);
-        stage.show();
-         */
-
-        neighbourhoods = new Neighbourhoods(); // read data
-        //stage.hide();
-
         configureInputBox();
 
         stage.setTitle("Neighbourhood information");
         mainLayout = new BorderPane();
 
-        Scene main = new Scene(mainLayout, 1300, 850);
+        Scene main = new Scene(mainLayout, 1200, 850);
 
         mainLayout.setLeft(inputBox);
 
         stage.setScene(main);
         stage.show();
+
+    }
+    @Override
+    public void init() throws Exception {
+        neighbourhoods = new Neighbourhoods(); // read data
+    }
+
+    public static void main(String[] args) {
+        System.setProperty("javafx.preloader", preloader.class.getCanonicalName());
+        launch(args);
     }
 
     private void configureInputBox(){
         inputBox = new VBox(10);
-        //inputBox.maxWidth(100);
         inputBox.setStyle(cssStyle);
 
         configureChoices();
