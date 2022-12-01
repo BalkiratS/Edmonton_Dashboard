@@ -1,12 +1,17 @@
 package com.example.milestone3;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -17,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.milestone3.Utils.readData;
 
@@ -56,43 +60,33 @@ public class HelloApplication extends Application {
 
     private BorderPane mainLayout;
     @Override
-    public void start(Stage stage) throws IOException, URISyntaxException, InterruptedException {
-
-
-
-        // add loading screen
-        VBox splashPane = new VBox();
-        Label label = new Label("Loading ...");
-//        Text label = new Text("Loading ...");
-//        label.setTextFill(Color.RED);
-        label.setAlignment(Pos.CENTER);
-        splashPane.getChildren().addAll(label);
-
-        Scene loading = new Scene(splashPane, 300, 300);
-        stage.setTitle("Loading...");
-        stage.setScene(loading);
-        stage.show();
-
-
-        neighbourhoods = new Neighbourhoods(); // read data
-        stage.hide();
+    public void start(Stage stage) throws IOException, URISyntaxException {
 
         configureInputBox();
 
         stage.setTitle("Neighbourhood information");
         mainLayout = new BorderPane();
 
-        Scene main = new Scene(mainLayout, 1300, 850);
+        Scene main = new Scene(mainLayout, 1200, 850);
 
         mainLayout.setLeft(inputBox);
 
         stage.setScene(main);
         stage.show();
+
+    }
+    @Override
+    public void init() throws Exception {
+        neighbourhoods = new Neighbourhoods(); // read data
+    }
+
+    public static void main(String[] args) {
+        System.setProperty("javafx.preloader", preloader.class.getCanonicalName());
+        launch(args);
     }
 
     private void configureInputBox(){
         inputBox = new VBox(10);
-        //inputBox.maxWidth(100);
         inputBox.setStyle(cssStyle);
 
         configureChoices();
