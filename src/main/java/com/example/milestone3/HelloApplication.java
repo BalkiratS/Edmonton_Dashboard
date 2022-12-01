@@ -54,10 +54,16 @@ public class HelloApplication extends Application {
             "-fx-border-color: grey;";
 
     private BarChart<String, Number> barChart;
+    private BarChart<Number, String> assessedValueChart;
+    private LineChart<String, Number> developmentChart;
+    private BarChart<Number, String> languageCharts;
+
+    private BorderPane mainLayout;
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
 
 
+        /*
         // add loading screen
         VBox splashPane = new VBox();
         //Label label = new Label("Loading ...");
@@ -67,26 +73,25 @@ public class HelloApplication extends Application {
 
         splashPane.getChildren().addAll(label);
 
-        Scene splashScene = new Scene(splashPane, 300, 300);
+        Scene loading = new Scene(splashPane, 300, 300);
         stage.setTitle("Loading...");
-        stage.setScene(splashScene);
+        stage.setScene(loading);
         stage.show();
+         */
 
         neighbourhoods = new Neighbourhoods(); // read data
-        stage.hide();
+        //stage.hide();
 
         configureInputBox();
-        configureGraph();
 
         stage.setTitle("Neighbourhood information");
-        BorderPane fullLayout = new BorderPane();
+        mainLayout = new BorderPane();
 
-        Scene scene = new Scene(fullLayout, 1300, 850);
+        Scene main = new Scene(mainLayout, 1300, 850);
 
-        fullLayout.setLeft(inputBox);
-        fullLayout.setCenter(barChart);
+        mainLayout.setLeft(inputBox);
 
-        stage.setScene(scene);
+        stage.setScene(main);
         stage.show();
     }
 
@@ -104,6 +109,7 @@ public class HelloApplication extends Application {
 
         plot = new Button("Plot");
         plot.setMaxWidth(Double.MAX_VALUE);
+        plot.setOnAction(actionEvent -> plotOnClick());
 
         reset = new Button("Reset");
         reset.setMaxWidth(Double.MAX_VALUE);
@@ -240,17 +246,108 @@ public class HelloApplication extends Application {
         return Double.parseDouble(currency.replaceAll("[$,]", ""));
     }
 
-    private void configureGraph(){
-        CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("X-Axis");
-        xAxis.setStyle("-fx-font-weight: bold;");
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Y-Axis");
-        yAxis.setStyle("-fx-font-weight: bold;");
-        barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Graph");
-        barChart.setAnimated(false);
-        barChart.setLegendVisible(false);
+    private void plotOnClick(){
+        if (assessedValueButton.isSelected()){
+            Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
+            Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
+            createAssessedValueGraph(minRange, maxRange);
+        } else if (developmentButton.isSelected()) {
+            createDevelopmentGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
+        } else if (languageButton.isSelected()) {
+            createLanguageGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
+        }
     }
 
+
+    private void createAssessedValueGraph(double minRange, double maxRange){
+        CategoryAxis yAxis = new CategoryAxis();
+        yAxis.setLabel("Neighbourhood");
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setLabel("Average Assessed Value");
+
+        assessedValueChart = new BarChart<>(xAxis, yAxis);
+        assessedValueChart.setTitle("Average Assessed Value");
+        assessedValueChart.setAnimated(false);
+        assessedValueChart.setLegendVisible(false);
+
+        XYChart.Series<Number, String> series = new XYChart.Series<>();
+        for (Neighbourhood neighbourhood : neighbourhoods.getNeighbourhoodsList()) { //create the series with list of AccountEntry
+            if (neighbourhood.getAverageAssessedValue() >= minRange && neighbourhood.getAverageAssessedValue() <= maxRange){
+                series.getData().add(new XYChart.Data<>(neighbourhood.getAverageAssessedValue(), neighbourhood.getNeighbourhoodName()));
+            }
+
+        }
+        assessedValueChart.getData().add(series); //add series to bar chart
+
+        mainLayout.setCenter(assessedValueChart);
+
+    }
+
+    private void createDevelopmentGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Year");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Development Value");
+
+        developmentChart = new LineChart<>(xAxis, yAxis);
+        developmentChart.setTitle("Development over year");
+        developmentChart.setAnimated(false);
+
+        if (neighbourhood1 != null){
+            developmentChart.getData().add(addDevelopmentSeries(neighbourhood1));
+        }
+        if (neighbourhood2 != null){
+            developmentChart.getData().add(addDevelopmentSeries(neighbourhood2));
+        }
+        if (neighbourhood3 != null){
+            developmentChart.getData().add(addDevelopmentSeries(neighbourhood3));
+        }
+
+        mainLayout.setCenter(developmentChart);
+
+    }
+    private XYChart.Series<String, Number> addDevelopmentSeries(String neighbourhoodName){
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName(neighbourhoodName);
+
+        for ( Integer key : neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getNeighbourhoodDevelopment().keySet()) {
+            series.getData().add(new XYChart.Data<>(key.toString(), neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getNeighbourhoodDevelopment().get(key)));
+        }
+        return series;
+
+    }
+
+    private void createLanguageGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
+        NumberAxis  xAxis = new NumberAxis();
+        xAxis.setLabel("Households");
+        CategoryAxis yAxis = new CategoryAxis();
+        yAxis.setLabel("Languages");
+        languageCharts = new BarChart<>(xAxis, yAxis);
+        languageCharts.setTitle("Top 10 Languages Spoken");
+        languageCharts.setAnimated(false);
+
+        if (neighbourhood1 != null){
+            languageCharts.getData().add(addLanguageSeries(neighbourhood1));
+        }
+        if (neighbourhood2 != null){
+            languageCharts.getData().add(addLanguageSeries(neighbourhood2));
+        }
+        if (neighbourhood3 != null){
+            languageCharts.getData().add(addLanguageSeries(neighbourhood3));
+        }
+
+        mainLayout.setCenter(languageCharts);
+
+
+    }
+
+    private XYChart.Series<Number, String> addLanguageSeries(String neighbourhoodName){
+        XYChart.Series<Number, String> series = new XYChart.Series<>();
+        series.setName(neighbourhoodName);
+
+        for ( String key : neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getLanguages().keySet()) {
+            series.getData().add(new XYChart.Data<>(neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getLanguages().get(key), key));
+        }
+        return series;
+    }
 }

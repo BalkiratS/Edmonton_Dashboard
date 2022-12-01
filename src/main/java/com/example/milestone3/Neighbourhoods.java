@@ -62,4 +62,13 @@ public class Neighbourhoods{
         }
         return returnList;
     }
+
+    public Neighbourhood getNeighbourhoodByName(String nName){
+        for (Neighbourhood neighbourhood: neighbourhoods){
+            if (neighbourhood.getNeighbourhoodName().equalsIgnoreCase(nName)){
+                return neighbourhood;
+            }
+        }
+        return null;
+    }
 }
