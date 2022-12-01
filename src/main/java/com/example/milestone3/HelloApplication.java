@@ -2,6 +2,7 @@ package com.example.milestone3;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.milestone3.Utils.readData;
 
@@ -54,27 +56,26 @@ public class HelloApplication extends Application {
 
     private BorderPane mainLayout;
     @Override
-    public void start(Stage stage) throws IOException, URISyntaxException {
+    public void start(Stage stage) throws IOException, URISyntaxException, InterruptedException {
 
 
-        /*
+
         // add loading screen
         VBox splashPane = new VBox();
-        //Label label = new Label("Loading ...");
-        Text label = new Text("Loading ...");
+        Label label = new Label("Loading ...");
+//        Text label = new Text("Loading ...");
 //        label.setTextFill(Color.RED);
-//        label.setAlignment(Pos.CENTER);
-
+        label.setAlignment(Pos.CENTER);
         splashPane.getChildren().addAll(label);
 
         Scene loading = new Scene(splashPane, 300, 300);
         stage.setTitle("Loading...");
         stage.setScene(loading);
         stage.show();
-         */
+
 
         neighbourhoods = new Neighbourhoods(); // read data
-        //stage.hide();
+        stage.hide();
 
         configureInputBox();
 
