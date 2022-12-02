@@ -236,23 +236,54 @@ public class HelloApplication extends Application {
     }
 
     private void plotOnClick(){
-        if (assessedValueButton.isSelected()){
-            Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
-            Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
-            createAssessedValueGraph(minRange, maxRange);
-        } else if (developmentButton.isSelected()) {
-            createDevelopmentGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
-        } else if (languageButton.isSelected()) {
-            createLanguageGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
+        if(validateInputs()){
+            if (assessedValueButton.isSelected()){
+                Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
+                Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
+                createAssessedValueGraph(minRange, maxRange);
+            } else if (developmentButton.isSelected()) {
+                createDevelopmentGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
+            } else if (languageButton.isSelected()) {
+                createLanguageGraph(neighbourhood1Box.getValue(), neighbourhood2Box.getValue(), neighbourhood3Box.getValue());
+            }
         }
+
     }
 
+    private boolean validateInputs() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Invalid Input");
 
+        if (assessedValueButton.isSelected() & rangeBox.getValue() == null) {
+            alert.setHeaderText("Please Select an Assessment Value Range From Filters");
+            alert.showAndWait();
+            return false;
+        } else if (developmentButton.isSelected() &
+                ((rangeBox.getValue() == null) || (neighbourhood1Box.getValue() == null))) {
+            alert.setHeaderText("Please Select an Assessment Value Range and a Minimum of" +
+                    " One Neighbourhood From Filters");
+            alert.showAndWait();
+            return false;
+        } else if (languageButton.isSelected() &
+                ((rangeBox.getValue() == null) || (neighbourhood1Box.getValue() == null))) {
+            alert.setHeaderText("Please Select an Assessment Value Range and a Minimum of" +
+                    " One Neighbourhood From Filters");
+            alert.showAndWait();
+            return false;
+        } else if(!assessedValueButton.isSelected() & !developmentButton.isSelected() & !languageButton.isSelected()){
+            alert.setHeaderText("Please Select One of the Criteria Buttons");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
     private void createAssessedValueGraph(double minRange, double maxRange){
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Neighbourhood");
+        yAxis.setStyle("-fx-font-weight: bold;");
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Average Assessed Value");
+        xAxis.setStyle("-fx-font-weight: bold;");
 
         assessedValueChart = new BarChart<>(xAxis, yAxis);
         assessedValueChart.setTitle("Average Assessed Value");
@@ -275,8 +306,10 @@ public class HelloApplication extends Application {
     private void createDevelopmentGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Year");
+        xAxis.setStyle("-fx-font-weight: bold;");
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Development Value");
+        yAxis.setStyle("-fx-font-weight: bold;");
 
         developmentChart = new LineChart<>(xAxis, yAxis);
         developmentChart.setTitle("Development over year");
@@ -309,8 +342,10 @@ public class HelloApplication extends Application {
     private void createLanguageGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
         NumberAxis  xAxis = new NumberAxis();
         xAxis.setLabel("Households");
+        xAxis.setStyle("-fx-font-weight: bold;");
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Languages");
+        yAxis.setStyle("-fx-font-weight: bold;");
         languageCharts = new BarChart<>(xAxis, yAxis);
         languageCharts.setTitle("Top 10 Languages Spoken");
         languageCharts.setAnimated(false);
