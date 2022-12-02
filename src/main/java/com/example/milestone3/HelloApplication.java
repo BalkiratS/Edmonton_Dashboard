@@ -1,29 +1,16 @@
 package com.example.milestone3;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static com.example.milestone3.Utils.readData;
+import java.util.Comparator;
 
 public class HelloApplication extends Application {
 
@@ -334,7 +321,7 @@ public class HelloApplication extends Application {
         XYChart.Series<Number, String> series = new XYChart.Series<>();
         series.setName(neighbourhoodName);
 
-        for ( String key : neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getLanguages().keySet()) {
+        for ( String key : neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getLanguages().keySet().stream().sorted(Comparator.reverseOrder()).toList()) {
             series.getData().add(new XYChart.Data<>(neighbourhoods.getNeighbourhoodByName(neighbourhoodName).getLanguages().get(key), key));
         }
         return series;
