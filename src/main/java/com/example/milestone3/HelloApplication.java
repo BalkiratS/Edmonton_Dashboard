@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Comparator;
+import java.util.Objects;
 
 public class HelloApplication extends Application {
 
@@ -23,28 +24,6 @@ public class HelloApplication extends Application {
     private ComboBox<String> neighbourhood1Box;
     private ComboBox<String> neighbourhood2Box;
     private ComboBox<String> neighbourhood3Box;
-    private Button plot;
-    private Button reset;
-    private final String titleFont = "-fx-background-color: transparent;" +
-            "-fx-font-family: Georgia;" +
-            "-fx-font-size: 20px;" +
-            "-fx-font-weight: bold";
-
-    private String cssStyle = "-fx-background-color: transparent;" +
-            "-fx-font-family: Verdana;" +
-            "-fx-font-size: 14px;" +
-            "-fx-padding: 10;" +
-            "-fx-border-style: solid inside;" +
-            "-fx-border-width: 1;" +
-            "-fx-border-insets: 5;" +
-            "-fx-border-radius: 4;" +
-            "-fx-border-color: grey;";
-
-    private BarChart<String, Number> barChart;
-    private BarChart<Number, String> assessedValueChart;
-    private LineChart<String, Number> developmentChart;
-    private BarChart<Number, String> languageCharts;
-
     private BorderPane mainLayout;
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
@@ -55,7 +34,7 @@ public class HelloApplication extends Application {
         mainLayout = new BorderPane();
 
         Scene main = new Scene(mainLayout, 1200, 850);
-        main.getStylesheets().add(getClass().getResource("GraphColours.css").toExternalForm());
+        main.getStylesheets().add(Objects.requireNonNull(getClass().getResource("GraphColours.css")).toExternalForm());
 
         mainLayout.setLeft(inputBox);
 
@@ -75,7 +54,7 @@ public class HelloApplication extends Application {
 
     private void configureInputBox(){
         inputBox = new VBox(10);
-        inputBox.setStyle(cssStyle);
+        inputBox.getStyleClass().add("inputBox");
 
         configureChoices();
 
@@ -84,11 +63,11 @@ public class HelloApplication extends Application {
         HBox plotResetBox = new HBox(10);
         plotResetBox.setPadding(new Insets(20, 0, 0, 0));
 
-        plot = new Button("Plot");
+        Button plot = new Button("Plot");
         plot.setMaxWidth(Double.MAX_VALUE);
         plot.setOnAction(actionEvent -> plotOnClick());
 
-        reset = new Button("Reset");
+        Button reset = new Button("Reset");
         reset.setMaxWidth(Double.MAX_VALUE);
         reset.setOnAction(actionEvent -> resetOnClick());
 
@@ -113,7 +92,7 @@ public class HelloApplication extends Application {
     private void configureChoices(){
         Label title1 = new Label("Select Criteria");
         title1.setPadding(new Insets(0, 0, 5, 0));
-        title1.setStyle(titleFont);
+        title1.getStyleClass().add("title");
 
         ToggleGroup choiceGroup = new ToggleGroup();
 
@@ -148,7 +127,7 @@ public class HelloApplication extends Application {
 
     private void configureFilters(){
         Label title2 = new Label("Filters");
-        title2.setStyle(titleFont);
+        title2.getStyleClass().add("title");
         title2.setPadding(new Insets(0, 0, 5, 0));
 
         Label rangeLabel = new Label("Assessed Value Range:");
@@ -294,16 +273,14 @@ public class HelloApplication extends Application {
     private void createAssessedValueGraph(double minRange, double maxRange){
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Neighbourhood");
-        yAxis.setStyle("-fx-font-weight: bold;");
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Average Assessed Value");
-        xAxis.setStyle("-fx-font-weight: bold;");
 
-        assessedValueChart = new BarChart<>(xAxis, yAxis);
+        BarChart<Number, String> assessedValueChart = new BarChart<>(xAxis, yAxis);
         assessedValueChart.setTitle("Average Assessed Value");
         assessedValueChart.setAnimated(false);
         assessedValueChart.setLegendVisible(false);
-        assessedValueChart.setPadding(new Insets(0, 20, 0, 0));
+        assessedValueChart.setPadding(new Insets(10, 20, 10, 10));
 
         XYChart.Series<Number, String> series = new XYChart.Series<>();
         for (Neighbourhood neighbourhood : neighbourhoods.getNeighbourhoodsList()) { //create the series with list of AccountEntry
@@ -324,10 +301,10 @@ public class HelloApplication extends Application {
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Development Value");
 
-        developmentChart = new LineChart<>(xAxis, yAxis);
+        LineChart<String, Number> developmentChart = new LineChart<>(xAxis, yAxis);
         developmentChart.setTitle("Development over year");
         developmentChart.setAnimated(false);
-        developmentChart.setPadding(new Insets(0, 10, 0, 0));
+        developmentChart.setPadding(new Insets(10, 10, 10, 10));
 
         if (neighbourhood1 != null){
             developmentChart.getData().add(addDevelopmentSeries(neighbourhood1));
@@ -359,10 +336,10 @@ public class HelloApplication extends Application {
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Languages");
 
-        languageCharts = new BarChart<>(xAxis, yAxis);
+        BarChart<Number, String> languageCharts = new BarChart<>(xAxis, yAxis);
         languageCharts.setTitle("Top 10 Languages Spoken");
         languageCharts.setAnimated(false);
-        languageCharts.setPadding(new Insets(0, 10, 0, 0));
+        languageCharts.setPadding(new Insets(10, 10, 10, 10));
 
         if (neighbourhood1 != null){
             languageCharts.getData().add(addLanguageSeries(neighbourhood1));
