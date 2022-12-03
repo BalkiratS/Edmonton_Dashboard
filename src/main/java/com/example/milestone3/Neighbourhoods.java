@@ -71,4 +71,32 @@ public class Neighbourhoods{
         }
         return null;
     }
-}
+
+    public List<Neighbourhood> getEmptyDevelopmentNeighbourhoods(){
+        List<Neighbourhood> returnList = new ArrayList<>();
+        for (Neighbourhood neighbourhood: neighbourhoods){
+            if (neighbourhood.getNeighbourhoodDevelopment().isEmpty()){
+                returnList.add(neighbourhood);
+            }
+        }
+        return returnList;
+    }
+    public List<Neighbourhood> getEmptyLanguageNeighbourhoods(){
+        List<Neighbourhood> returnList = new ArrayList<>();
+
+        for (Neighbourhood neighbourhood: neighbourhoods){
+            boolean emptyData = true;
+            for (String key: neighbourhood.getLanguages().keySet()){
+                if (neighbourhood.getLanguages().get(key) != 0){
+                    emptyData = false;
+                    break;
+                }
+            }
+            if (emptyData){
+                returnList.add(neighbourhood);
+            }
+        }
+        return returnList;
+    }
+
+    }

@@ -90,18 +90,24 @@ public class HelloApplication extends Application {
 
         reset = new Button("Reset");
         reset.setMaxWidth(Double.MAX_VALUE);
-        reset.setOnAction(actionEvent -> {  rangeBox.setValue(null);
-                                            rangeBox.setDisable(true);
-                                            neighbourhood1Box.setDisable(true);
-                                            assessedValueButton.setSelected(false);
-                                            developmentButton.setSelected(false);
-                                            languageButton.setSelected(false);});
+        reset.setOnAction(actionEvent -> resetOnClick());
 
         HBox.setHgrow(plot, Priority.ALWAYS);
         HBox.setHgrow(reset, Priority.ALWAYS);
         plotResetBox.getChildren().addAll(plot, reset);
 
         inputBox.getChildren().addAll(plotResetBox);
+    }
+
+    private void resetOnClick(){
+        resetNeighbourhoodBoxes();
+        rangeBox.setValue(null);
+        rangeBox.setDisable(true);
+        neighbourhood1Box.setDisable(true);
+        assessedValueButton.setSelected(false);
+        developmentButton.setSelected(false);
+        languageButton.setSelected(false);
+        mainLayout.setCenter(null);
     }
 
     private void configureChoices(){
@@ -114,28 +120,30 @@ public class HelloApplication extends Application {
         assessedValueButton = new RadioButton("Average Assessed value");
         assessedValueButton.setPadding(new Insets(10, 0, 10, 0));
         assessedValueButton.setToggleGroup(choiceGroup);
-        assessedValueButton.setOnAction(actionEvent -> {rangeBox.setValue(null);
-                                                        rangeBox.setDisable(false);
+        assessedValueButton.setOnAction(actionEvent -> {choiceButtonOnClick();
                                                         neighbourhood1Box.setDisable(true);});
 
         developmentButton = new RadioButton("Average Development (2000-2013)");
         developmentButton.setPadding(new Insets(0, 0, 10, 0));
         developmentButton.setToggleGroup(choiceGroup);
-        developmentButton.setOnAction(actionEvent -> {
-                                                    rangeBox.setValue(null);
-                                                    rangeBox.setDisable(false);
-                                                    neighbourhood1Box.setDisable(false);});
+        developmentButton.setOnAction(actionEvent -> choiceButtonOnClick());
 
         languageButton = new RadioButton("Top 10 Languages");
         languageButton.setPadding(new Insets(0, 0, 10, 0));
         languageButton.setToggleGroup(choiceGroup);
-        languageButton.setOnAction(actionEvent -> { rangeBox.setValue(null);
-                                                    rangeBox.setDisable(false);
-                                                    neighbourhood1Box.setDisable(false);});
+        languageButton.setOnAction(actionEvent -> choiceButtonOnClick());
 
         Separator line = new Separator();
 
         inputBox.getChildren().addAll(title1, assessedValueButton, developmentButton, languageButton, line);
+    }
+
+    private void choiceButtonOnClick(){
+        rangeBox.setValue(null);
+        rangeBox.setDisable(false);
+        resetNeighbourhoodBoxes();
+        fillNeighbourhoodBox();
+        neighbourhood1Box.setDisable(false);
     }
 
     private void configureFilters(){
@@ -179,44 +187,60 @@ public class HelloApplication extends Application {
 
         rangeBox.setOnAction(actionEvent -> {
 
-
-            neighbourhood1Box.getItems().clear();
-
-            neighbourhood2Box.getItems().clear();
-            neighbourhood2Box.setDisable(true);
-
-            neighbourhood3Box.getItems().clear();
-            neighbourhood3Box.setDisable(true);
-
-            if (rangeBox.getValue() != null){
-                Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
-                Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
-                for (Neighbourhood neighbourhood: neighbourhoods.getNeighbourhoodsInRange(minRange, maxRange)){
-                    neighbourhood1Box.getItems().add(neighbourhood.getNeighbourhoodName());
-                }
-            }
+            resetNeighbourhoodBoxes();
+            fillNeighbourhoodBox();
 
         });
 
-        neighbourhood1Box.setOnAction(actionEvent -> {
-                                                    neighbourhood2Box.setValue(null);
-                                                    neighbourhood2Box.getItems().clear();
-                                                    neighbourhood2Box.getItems().addAll(neighbourhood1Box.getItems());
-                                                    neighbourhood2Box.getItems().remove(neighbourhood1Box.getValue());
-                                                    neighbourhood2Box.setDisable(false);
-                                                      });
+        neighbourhood1Box.setOnAction(actionEvent -> neighbourhoodBoxOnCLick(neighbourhood1Box, neighbourhood2Box));
 
-        neighbourhood2Box.setOnAction(actionEvent -> {
-                                                    neighbourhood3Box.setValue(null);
-                                                    neighbourhood3Box.getItems().clear();
-                                                    neighbourhood3Box.getItems().addAll(neighbourhood2Box.getItems());
-                                                    neighbourhood3Box.getItems().remove(neighbourhood1Box.getValue());
-                                                    neighbourhood3Box.getItems().remove(neighbourhood2Box.getValue());
-                                                    neighbourhood3Box.setDisable(false);});
+        neighbourhood2Box.setOnAction(actionEvent -> neighbourhoodBoxOnCLick(neighbourhood2Box, neighbourhood3Box));
 
         Separator line2 = new Separator();
 
         inputBox.getChildren().addAll(title2, rangeLabel, rangeBox, neighbourhood1Label, neighbourhood1Box, neighbourhood2Label, neighbourhood2Box, neighbourhood3Label, neighbourhood3Box, line2);
+    }
+
+    private void neighbourhoodBoxOnCLick(ComboBox<String> boxClicked, ComboBox<String> nextBox){
+        nextBox.setValue(null);
+        nextBox.getItems().clear();
+        nextBox.getItems().addAll(boxClicked.getItems());
+        nextBox.getItems().remove(boxClicked.getValue());
+        nextBox.setDisable(false);
+    }
+
+    private void resetNeighbourhoodBoxes(){
+
+        neighbourhood1Box.getItems().clear();
+
+        neighbourhood2Box.getItems().clear();
+        neighbourhood2Box.setDisable(true);
+
+        neighbourhood3Box.getItems().clear();
+        neighbourhood3Box.setDisable(true);
+    }
+
+    private void fillNeighbourhoodBox(){
+        if (rangeBox.getValue() != null){
+            Double minRange = currencyToDouble(rangeBox.getValue().split("-")[0]);
+            Double maxRange = currencyToDouble(rangeBox.getValue().split("-")[1]);
+            for (Neighbourhood neighbourhood: neighbourhoods.getNeighbourhoodsInRange(minRange, maxRange)){
+                neighbourhood1Box.getItems().add(neighbourhood.getNeighbourhoodName());
+            }
+        }
+        else {
+            neighbourhood1Box.getItems().addAll(neighbourhoods.getUniqueNeighbourhoodNames());
+        }
+
+        if (developmentButton.isSelected()){
+            for (Neighbourhood neighbourhood: neighbourhoods.getEmptyDevelopmentNeighbourhoods()) {
+                neighbourhood1Box.getItems().remove(neighbourhood.getNeighbourhoodName());
+            }
+        } else if (languageButton.isSelected()) {
+            for (Neighbourhood neighbourhood: neighbourhoods.getEmptyLanguageNeighbourhoods()) {
+                neighbourhood1Box.getItems().remove(neighbourhood.getNeighbourhoodName());
+            }
+        }
     }
 
     private Double currencyToDouble(String currency){
@@ -248,17 +272,15 @@ public class HelloApplication extends Application {
             alert.showAndWait();
             return false;
         } else if (developmentButton.isSelected() &
-                ((rangeBox.getValue() == null) || (neighbourhood1Box.getValue() == null))) {
+                neighbourhood1Box.getValue() == null) {
             alert.setHeaderText(null);
-            alert.setContentText("Please Select an Assessment Value Range and a Minimum of" +
-                    " One Neighbourhood From Filters");
+            alert.setContentText("Please Select Minimum One Neighbourhood From Filters");
             alert.showAndWait();
             return false;
         } else if (languageButton.isSelected() &
-                ((rangeBox.getValue() == null) || (neighbourhood1Box.getValue() == null))) {
+                neighbourhood1Box.getValue() == null) {
             alert.setHeaderText(null);
-            alert.setContentText("Please Select an Assessment Value Range and a Minimum of" +
-                    " One Neighbourhood From Filters");
+            alert.setContentText("Please Select Minimum One Neighbourhood From Filters");
             alert.showAndWait();
             return false;
         } else if(!assessedValueButton.isSelected() & !developmentButton.isSelected() & !languageButton.isSelected()){
@@ -299,10 +321,8 @@ public class HelloApplication extends Application {
     private void createDevelopmentGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Year");
-        xAxis.setStyle("-fx-font-weight: bold;");
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Development Value");
-        yAxis.setStyle("-fx-font-weight: bold;");
 
         developmentChart = new LineChart<>(xAxis, yAxis);
         developmentChart.setTitle("Development over year");
@@ -336,10 +356,9 @@ public class HelloApplication extends Application {
     private void createLanguageGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
         NumberAxis  xAxis = new NumberAxis();
         xAxis.setLabel("Households");
-        xAxis.setStyle("-fx-font-weight: bold;");
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Languages");
-        yAxis.setStyle("-fx-font-weight: bold;");
+
         languageCharts = new BarChart<>(xAxis, yAxis);
         languageCharts.setTitle("Top 10 Languages Spoken");
         languageCharts.setAnimated(false);
