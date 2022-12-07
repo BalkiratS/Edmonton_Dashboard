@@ -62,5 +62,6 @@
     -fx-font-family: Verdana;
     -fx-font-size: 14px;
     -fx-font-color: white;
+    -fx-show-delay: 100ms;
 }
 

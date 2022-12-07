@@ -7,6 +7,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -97,7 +98,7 @@ public class HelloApplication extends Application {
 
         ToggleGroup choiceGroup = new ToggleGroup();
 
-        assessedValueButton = new RadioButton("Average Assessed value");
+        assessedValueButton = new RadioButton("Average Assessed Value");
         assessedValueButton.setPadding(new Insets(10, 0, 10, 0));
         assessedValueButton.setToggleGroup(choiceGroup);
         assessedValueButton.setOnAction(actionEvent -> {choiceButtonOnClick();
@@ -275,7 +276,7 @@ public class HelloApplication extends Application {
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Neighbourhood");
         NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabel("Average Assessed Value");
+        xAxis.setLabel("Average Assessed Value($)");
 
         BarChart<Number, String> assessedValueChart = new BarChart<>(xAxis, yAxis);
         assessedValueChart.setTitle("Average Assessed Value");
@@ -308,7 +309,7 @@ public class HelloApplication extends Application {
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Year");
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Development Value");
+        yAxis.setLabel("Development Value($)");
 
         LineChart<String, Number> developmentChart = new LineChart<>(xAxis, yAxis);
         developmentChart.setTitle("Development over year");
@@ -349,7 +350,7 @@ public class HelloApplication extends Application {
 
     private void createLanguageGraph(String neighbourhood1, String neighbourhood2, String neighbourhood3){
         NumberAxis  xAxis = new NumberAxis();
-        xAxis.setLabel("Households");
+        xAxis.setLabel("No. of Households");
         CategoryAxis yAxis = new CategoryAxis();
         yAxis.setLabel("Languages");
 
@@ -370,11 +371,10 @@ public class HelloApplication extends Application {
 
         for (XYChart.Series<Number, String> s : languageCharts.getData()) {
             for (XYChart.Data<Number, String> entry : s.getData()) {
-                Tooltip t = new Tooltip("Number of speakers: " + entry.getXValue().toString());
+                Tooltip t = new Tooltip("Number of Households: " + entry.getXValue().toString());
                 Tooltip.install(entry.getNode(), t);
             }
         }
-
         mainLayout.setCenter(languageCharts);
     }
 
