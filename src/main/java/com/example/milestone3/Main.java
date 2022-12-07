@@ -7,15 +7,12 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     private Neighbourhoods neighbourhoods;
     private VBox inputBox;
     private RadioButton assessedValueButton;
@@ -28,7 +25,7 @@ public class HelloApplication extends Application {
     private BorderPane mainLayout;
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
     @Override
-    public void start(Stage stage) throws IOException, URISyntaxException {
+    public void start(Stage stage) {
 
         configureInputBox();
 
@@ -45,7 +42,7 @@ public class HelloApplication extends Application {
 
     }
     @Override
-    public void init() throws Exception {
+    public void init() {
         neighbourhoods = new Neighbourhoods(); // read data
     }
 
