@@ -10,11 +10,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Objects;
 
 public class HelloApplication extends Application {
-
     private Neighbourhoods neighbourhoods;
     private VBox inputBox;
     private RadioButton assessedValueButton;
@@ -25,6 +25,7 @@ public class HelloApplication extends Application {
     private ComboBox<String> neighbourhood2Box;
     private ComboBox<String> neighbourhood3Box;
     private BorderPane mainLayout;
+    private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException {
 
@@ -291,6 +292,14 @@ public class HelloApplication extends Application {
         }
         assessedValueChart.getData().add(series); //add series to bar chart
 
+        for (XYChart.Series<Number, String> s : assessedValueChart.getData()) {
+            for (XYChart.Data<Number, String> entry : s.getData()) {
+                currencyFormat.setMaximumFractionDigits(0);
+                Tooltip t = new Tooltip("Average Assessed Value: " + currencyFormat.format(entry.getXValue()));
+                Tooltip.install(entry.getNode(), t);
+            }
+        }
+
         mainLayout.setCenter(assessedValueChart);
 
     }
@@ -314,6 +323,14 @@ public class HelloApplication extends Application {
         }
         if (neighbourhood3 != null){
             developmentChart.getData().add(addDevelopmentSeries(neighbourhood3));
+        }
+
+        for (XYChart.Series<String, Number> s : developmentChart.getData()) {
+            for (XYChart.Data<String, Number> entry : s.getData()) {
+                currencyFormat.setMaximumFractionDigits(0);
+                Tooltip t = new Tooltip("Total Investment: " + currencyFormat.format(entry.getYValue()));
+                Tooltip.install(entry.getNode(), t);
+            }
         }
 
         mainLayout.setCenter(developmentChart);
@@ -351,9 +368,14 @@ public class HelloApplication extends Application {
             languageCharts.getData().add(addLanguageSeries(neighbourhood3));
         }
 
+        for (XYChart.Series<Number, String> s : languageCharts.getData()) {
+            for (XYChart.Data<Number, String> entry : s.getData()) {
+                Tooltip t = new Tooltip("Number of speakers: " + entry.getXValue().toString());
+                Tooltip.install(entry.getNode(), t);
+            }
+        }
+
         mainLayout.setCenter(languageCharts);
-
-
     }
 
     private XYChart.Series<Number, String> addLanguageSeries(String neighbourhoodName){
