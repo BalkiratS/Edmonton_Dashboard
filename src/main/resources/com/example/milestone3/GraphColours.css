@@ -1,0 +1,67 @@
+/* Bar chart colours */
+.default-color0.chart-bar {
+    -fx-bar-fill: #6b9ac4;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #97d8c4;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #4059ad;
+}
+
+/* Line chart colours */
+.default-color0.chart-series-line {
+    -fx-stroke: #97d8c4;
+}
+.default-color0.chart-line-symbol {
+    -fx-background-color: #97d8c4, #ffffff;
+}
+
+.default-color1.chart-series-line {
+    -fx-stroke: #6b9ac4;
+}
+.default-color1.chart-line-symbol {
+    -fx-background-color: #6b9ac4, #ffffff;
+}
+
+.default-color2.chart-series-line {
+    -fx-stroke: #4059ad;
+}
+.default-color2.chart-line-symbol {
+    -fx-background-color: #4059ad, #ffffff;
+}
+.chart-title {
+    -fx-font-family: Georgia;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.inputBox{
+    -fx-background-color: transparent;
+    -fx-font-family: Verdana;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-style: solid inside;
+    -fx-border-width: 1;
+    -fx-border-insets: 5;
+    -fx-border-radius: 4;
+    -fx-border-color: grey;
+}
+
+.title{
+    -fx-background-color: transparent;
+    -fx-font-family: Georgia;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.tooltip{
+    -fx-background-color: black;
+    -fx-font-family: Verdana;
+    -fx-font-size: 14px;
+    -fx-font-color: white;
+    -fx-show-delay: 100ms;
+}
+
