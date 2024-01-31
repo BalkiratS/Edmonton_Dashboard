@@ -2,22 +2,13 @@
 
 ## Explore Edmonton's neighbourhood insights through interactive visualizations.
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="screenshots/Screenshot_1.png" alt="Screenshot 1" width="300"/>
-    </td>
-    <td align="center">
-      <img src="screenshots/Screenshot_2.png" alt="Screenshot 2" width="300"/>
-    </td>
-    <td align="center">
-      <img src="screenshots/Screenshot_3.png" alt="Screenshot 3" width="300"/>
-    </td>
-    <td align="center">
-      <img src="screenshots/Screenshot_4.png" alt="Screenshot 4" width="300"/>
-    </td>
-  </tr>
-</table>
+
+<img src="screenshots/Screenshot_1.png" alt="Screenshot 1" width="400"/>
+<img src="screenshots/Screenshot_2.png" alt="Screenshot 2" width="700"/>
+<img src="screenshots/Screenshot_3.png" alt="Screenshot 3" width="700"/>
+<img src="screenshots/Screenshot_4.png" alt="Screenshot 4" width="700"/>
+<img src="screenshots/Screenshot_5.png" alt="Screenshot 5" width="700"/>
+
 
 
 ## Overview
