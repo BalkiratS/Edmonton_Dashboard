@@ -3,13 +3,6 @@
 ## Explore Edmonton's neighbourhood insights through interactive visualizations.
 
 
-<img src="screenshots/Screenshot_1.png" alt="Screenshot 1" width="400"/>
-<img src="screenshots/Screenshot_2.png" alt="Screenshot 2" width="700"/>
-<img src="screenshots/Screenshot_3.png" alt="Screenshot 3" width="700"/>
-<img src="screenshots/Screenshot_4.png" alt="Screenshot 4" width="700"/>
-<img src="screenshots/Screenshot_5.png" alt="Screenshot 5" width="700"/>
-
-
 
 ## Overview
 
@@ -18,13 +11,25 @@ This Java-based application brings Edmonton's neighbourhood data to life through
 ## Features
 - **Visualizations:**
     - Average Assessed Value of Properties (Bar Graph)
+      
+      <img src="screenshots/Screenshot_2.png" alt="Screenshot 2" width="700"/>
+      
     - Average Development Spending 2000-2013 (Line Graph)
+      
+      <img src="screenshots/Screenshot_3.png" alt="Screenshot 3" width="700"/>
+      <img src="screenshots/Screenshot_4.png" alt="Screenshot 4" width="700"/>
+      
     - Top 10 Languages Spoken (Bar Graph)
+      
+      <img src="screenshots/Screenshot_5.png" alt="Screenshot 5" width="700"/>
+      
 - **Interactive Controls:**
     - Filter neighbourhoods based on average assessed value ranges.
     - Compare up to 3 neighbourhoods simultaneously for development spending and language data.
 - **Data Source:**
     - Utilizes publicly available datasets from the Edmonton Open Data Portal.
+      
+      <img src="screenshots/Screenshot_1.png" alt="Screenshot 1" width="400"/>
 
 ## Usage
 1. Clone the repository:
